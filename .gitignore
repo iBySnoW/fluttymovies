@@ -45,5 +45,9 @@ app.*.map.json
 /android/app/release
 
 # FVM Version Cache
+<<<<<<< Updated upstream
 .fvm/
 .fvmrc
+=======
+.fvm/
+>>>>>>> Stashed changes
