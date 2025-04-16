@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../main.dart';
 import '../providers/auth_provider.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
@@ -45,6 +46,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authStateProvider);
+    final isDarkMode = ref.watch(themeProvider);
+    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -64,7 +67,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             return const Center(child: Text('Utilisateur non connecté'));
           }
 
-          return Padding(
+          return SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
             child: Form(
               key: _formKey,
@@ -72,22 +75,63 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Center(
-                    child: CircleAvatar(
-                      radius: 50,
-                      backgroundImage: user.avatar != null
-                          ? NetworkImage(user.avatar!)
-                          : null,
-                      child: user.avatar == null
-                          ? const Icon(Icons.person, size: 50)
-                          : null,
+                    child: Stack(
+                      children: [
+                        Container(
+                          width: 100,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: LinearGradient(
+                              colors: [
+                                theme.colorScheme.primary,
+                                theme.colorScheme.secondary,
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                          ),
+                          child: user.avatar != null
+                              ? ClipOval(
+                                  child: Image.network(
+                                    user.avatar!,
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
+                              : Icon(
+                                  Icons.person,
+                                  size: 50,
+                                  color: theme.colorScheme.onPrimary,
+                                ),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.primary,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.edit,
+                              size: 20,
+                              color: theme.colorScheme.onPrimary,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 32),
                   TextFormField(
                     controller: _usernameController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: 'Nom d\'utilisateur',
-                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(
+                        Icons.person_outline,
+                        color: theme.colorScheme.primary,
+                      ),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -97,18 +141,40 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     },
                   ),
                   const SizedBox(height: 16),
-                  Text(
-                    'Email: ${user.email}',
-                    style: Theme.of(context).textTheme.bodyLarge,
+                  TextFormField(
+                    initialValue: user.email,
+                    enabled: false,
+                    decoration: InputDecoration(
+                      labelText: 'Email',
+                      prefixIcon: Icon(
+                        Icons.email_outlined,
+                        color: theme.colorScheme.primary,
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 24),
+                  ListTile(
+                    leading: Icon(
+                      isDarkMode ? Icons.dark_mode : Icons.light_mode,
+                      color: theme.colorScheme.primary,
+                    ),
+                    title: Text(
+                      'Mode sombre',
+                      style: theme.textTheme.titleMedium,
+                    ),
+                    trailing: Switch(
+                      value: isDarkMode,
+                      onChanged: (_) => ref.read(themeProvider.notifier).toggleTheme(),
+                      activeColor: theme.colorScheme.primary,
+                    ),
+                  ),
+                  const SizedBox(height: 32),
                   SizedBox(
                     width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: authState.isLoading ? null : _updateProfile,
-                      child: authState.isLoading
-                          ? const CircularProgressIndicator()
-                          : const Text('Mettre à jour le profil'),
+                    child: ElevatedButton.icon(
+                      onPressed: _updateProfile,
+                      icon: const Icon(Icons.save),
+                      label: const Text('Mettre à jour le profil'),
                     ),
                   ),
                 ],
