@@ -62,14 +62,24 @@ class MoviesRepositoryImpl implements MoviesRepository {
   }
 
   @override
-  Future<Either<String, void>> toggleFavorite(int movieId) async {
+  Future<Either<String, void>> addToFavorites(int movieId) async {
     try {
       final favorites = _prefs.getStringList(_favoritesKey) ?? [];
-      if (favorites.contains(movieId.toString())) {
-        favorites.remove(movieId.toString());
-      } else {
+      if (!favorites.contains(movieId.toString())) {
         favorites.add(movieId.toString());
+        await _prefs.setStringList(_favoritesKey, favorites);
       }
+      return const Right(null);
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
+  @override
+  Future<Either<String, void>> removeFromFavorites(int movieId) async {
+    try {
+      final favorites = _prefs.getStringList(_favoritesKey) ?? [];
+      favorites.remove(movieId.toString());
       await _prefs.setStringList(_favoritesKey, favorites);
       return const Right(null);
     } catch (e) {
@@ -78,7 +88,7 @@ class MoviesRepositoryImpl implements MoviesRepository {
   }
 
   @override
-  Future<Either<String, List<Movie>>> getFavoriteMovies() async {
+  Future<Either<String, List<Movie>>> getFavoriteMovies({int page = 1}) async {
     try {
       final favorites = _prefs.getStringList(_favoritesKey) ?? [];
       final movies = <Movie>[];

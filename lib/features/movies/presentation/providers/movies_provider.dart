@@ -65,8 +65,16 @@ class MoviesNotifier extends StateNotifier<AsyncValue<List<Movie>>> {
     );
   }
 
-  Future<void> toggleFavorite(int movieId) async {
-    final result = await _repository.toggleFavorite(movieId);
+  Future<void> addToFavorites(int movieId) async {
+    final result = await _repository.addToFavorites(movieId);
+    result.fold(
+      (error) => state = AsyncValue.error(error, StackTrace.current),
+      (_) => loadFavoriteMovies(),
+    );
+  }
+
+  Future<void> removeFromFavorites(int movieId) async {
+    final result = await _repository.removeFromFavorites(movieId);
     result.fold(
       (error) => state = AsyncValue.error(error, StackTrace.current),
       (_) => loadFavoriteMovies(),

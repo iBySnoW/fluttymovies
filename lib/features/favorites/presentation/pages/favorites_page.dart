@@ -49,9 +49,27 @@ class _FavoritesPageState extends ConsumerState<FavoritesPage> {
             itemCount: movies.length,
             itemBuilder: (context, index) {
               final movie = movies[index];
-              return MovieCard(
-                movie: movie,
-                onTap: () => context.push('/movie/${movie.id}'),
+              return Stack(
+                children: [
+                  MovieCard(
+                    movie: movie,
+                    onTap: () => context.push('/movie/${movie.id}'),
+                  ),
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: IconButton(
+                      onPressed: () {
+                        ref.read(favoriteMoviesProvider.notifier)
+                            .removeFromFavorites(movie.id);
+                      },
+                      icon: const Icon(
+                        Icons.favorite,
+                        color: Colors.red,
+                      ),
+                    ),
+                  ),
+                ],
               );
             },
           );
