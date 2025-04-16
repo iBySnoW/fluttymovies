@@ -6,11 +6,13 @@ class TMDBService {
   final Dio _dio;
   final String _apiKey;
   final String _baseUrl;
+  final String _sessionId;
 
   TMDBService()
       : _dio = Dio(),
         _apiKey = dotenv.env['TMDB_API_KEY'] ?? '',
-        _baseUrl = dotenv.env['TMDB_BASE_URL'] ?? '';
+        _baseUrl = dotenv.env['TMDB_BASE_URL'] ?? '',
+        _sessionId = dotenv.env['TMDB_SESSION_ID'] ?? '';
 
   Future<List<Movie>> getPopularMovies({int page = 1}) async {
     try {
@@ -114,6 +116,63 @@ class TMDBService {
       );
     } catch (e) {
       throw 'Erreur lors de la notation du film: $e';
+    }
+  }
+
+  Future<void> addToFavorites(int movieId) async {
+    try {
+      await _dio.post(
+        '$_baseUrl/account/{account_id}/favorite',
+        queryParameters: {
+          'api_key': _apiKey,
+          'session_id': _sessionId,
+        },
+        data: {
+          'media_type': 'movie',
+          'media_id': movieId,
+          'favorite': true,
+        },
+      );
+    } catch (e) {
+      throw 'Erreur lors de l\'ajout aux favoris: $e';
+    }
+  }
+
+  Future<void> removeFromFavorites(int movieId) async {
+    try {
+      await _dio.post(
+        '$_baseUrl/account/{account_id}/favorite',
+        queryParameters: {
+          'api_key': _apiKey,
+          'session_id': _sessionId,
+        },
+        data: {
+          'media_type': 'movie',
+          'media_id': movieId,
+          'favorite': false,
+        },
+      );
+    } catch (e) {
+      throw 'Erreur lors de la suppression des favoris: $e';
+    }
+  }
+
+  Future<List<Movie>> getFavoriteMovies({int page = 1}) async {
+    try {
+      final response = await _dio.get(
+        '$_baseUrl/account/{account_id}/favorite/movies',
+        queryParameters: {
+          'api_key': _apiKey,
+          'session_id': _sessionId,
+          'page': page,
+          'language': 'fr-FR',
+        },
+      );
+
+      final results = response.data['results'] as List;
+      return results.map((json) => Movie.fromJson(json)).toList();
+    } catch (e) {
+      throw 'Erreur lors de la récupération des films favoris: $e';
     }
   }
 } 
