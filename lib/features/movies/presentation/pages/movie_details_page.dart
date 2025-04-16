@@ -16,7 +16,6 @@ class MovieDetailsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final movieState = ref.watch(movieDetailsProvider(int.parse(movieId)));
-
     return Scaffold(
       body: movieState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -28,7 +27,7 @@ class MovieDetailsPage extends ConsumerWidget {
               pinned: true,
               flexibleSpace: FlexibleSpaceBar(
                 background: CachedNetworkImage(
-                  imageUrl: '${AppConstants.imageBaseUrl}${movie.backdropPath}',
+                  imageUrl: 'https://image.tmdb.org/t/p/original${movie.backdropPath}',
                   fit: BoxFit.cover,
                   placeholder: (context, url) => const Center(
                     child: CircularProgressIndicator(),

@@ -24,7 +24,7 @@ class MovieCard extends StatelessWidget {
           children: [
             Expanded(
               child: CachedNetworkImage(
-                imageUrl: '${AppConstants.imageBaseUrl}${movie.posterPath}',
+                imageUrl: 'https://image.tmdb.org/t/p/w500${movie.posterPath}',
                 fit: BoxFit.cover,
                 placeholder: (context, url) => const Center(
                   child: CircularProgressIndicator(),
