@@ -127,42 +127,39 @@ class _FavoritesPageState extends ConsumerState<FavoritesPage> {
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
                       final movie = movies[index];
-                      return Hero(
-                        tag: 'movie_${movie.id}_favorite',
-                        child: Stack(
-                          children: [
-                            MovieCard(
-                              movie: movie,
-                              onTap: () => context.push('/movie/${movie.id}'),
-                            ),
-                            Positioned(
-                              top: 8,
-                              right: 8,
-                              child: Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  onTap: () {
-                                    ref.read(favoriteMoviesProvider.notifier)
-                                        .removeFromFavorites(movie.id);
-                                  },
-                                  customBorder: const CircleBorder(),
-                                  child: Container(
-                                    padding: const EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      color: theme.colorScheme.surface.withOpacity(0.8),
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Icon(
-                                      Icons.favorite,
-                                      color: theme.colorScheme.primary,
-                                      size: 20,
-                                    ),
+                      return Stack(
+                        children: [
+                          MovieCard(
+                            movie: movie,
+                            onTap: () => context.push('/movie/${movie.id}'),
+                          ),
+                          Positioned(
+                            top: 8,
+                            right: 8,
+                            child: Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                onTap: () {
+                                  ref.read(favoriteMoviesProvider.notifier)
+                                      .removeFromFavorites(movie.id);
+                                },
+                                customBorder: const CircleBorder(),
+                                child: Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: theme.colorScheme.surface.withOpacity(0.8),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    Icons.favorite,
+                                    color: theme.colorScheme.primary,
+                                    size: 20,
                                   ),
                                 ),
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       );
                     },
                     childCount: movies.length,
