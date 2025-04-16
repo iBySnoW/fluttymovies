@@ -16,6 +16,8 @@ class MovieDetailsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final movieState = ref.watch(movieDetailsProvider(int.parse(movieId)));
+    final favoriteMoviesState = ref.watch(favoriteMoviesProvider);
+
     return Scaffold(
       body: movieState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -115,11 +117,23 @@ class MovieDetailsPage extends ConsumerWidget {
         ),
       ),
       floatingActionButton: movieState.whenOrNull(
-        data: (movie) => FloatingActionButton(
-          onPressed: () {
-            ref.read(favoriteMoviesProvider.notifier).toggleFavorite(movie.id);
+        data: (movie) => favoriteMoviesState.whenOrNull(
+          data: (favorites) {
+            final isFavorite = favorites.any((m) => m.id == movie.id);
+            return FloatingActionButton(
+              onPressed: () {
+                if (isFavorite) {
+                  ref.read(favoriteMoviesProvider.notifier).removeFromFavorites(movie.id);
+                } else {
+                  ref.read(favoriteMoviesProvider.notifier).addToFavorites(movie.id);
+                }
+              },
+              child: Icon(
+                isFavorite ? Icons.favorite : Icons.favorite_border,
+                color: isFavorite ? Colors.red : null,
+              ),
+            );
           },
-          child: const Icon(Icons.favorite),
         ),
       ),
     );
