@@ -48,51 +48,22 @@ void main() async {
   );
 }
 
-final _router = GoRouter(
-  initialLocation: '/',
-  routes: [
-    GoRoute(
-      path: '/',
-      builder: (context, state) => const HomePage(),
-    ),
-    GoRoute(
-      path: '/movie/:id',
-      builder: (context, state) => MovieDetailsPage(
-        movieId: state.pathParameters['id']!,
-      ),
-    ),
-    GoRoute(
-      path: '/login',
-      builder: (context, state) => const LoginPage(),
-    ),
-    GoRoute(
-      path: '/register',
-      builder: (context, state) => const RegisterPage(),
-    ),
-    GoRoute(
-      path: '/profile',
-      builder: (context, state) => const ProfilePage(),
-    ),
-    GoRoute(
-      path: '/favorites',
-      builder: (context, state) => const FavoritesPage(),
-    ),
-  ],
-);
-
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDarkMode = ref.watch(themeProvider);
-
+    
+    // Attendre que les providers asynchrones soient initialisés
+    final routerAsync = ref.watch(routerProvider);
+    
     return MaterialApp.router(
       title: 'FluttyMovies',
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
-      routerConfig: _router,
+      routerConfig: routerAsync,
       debugShowCheckedModeBanner: false,
     );
   }

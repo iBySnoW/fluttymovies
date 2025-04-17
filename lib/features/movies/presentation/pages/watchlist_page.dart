@@ -1,47 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:dio/dio.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
-import '../../../movies/presentation/providers/favorites_provider.dart';
+import '../providers/watchlist_provider.dart';
 
-class FavoritesPage extends ConsumerStatefulWidget {
-  const FavoritesPage({super.key});
+class WatchlistPage extends ConsumerStatefulWidget {
+  const WatchlistPage({super.key});
 
   @override
-  ConsumerState<FavoritesPage> createState() => _FavoritesPageState();
+  ConsumerState<WatchlistPage> createState() => _WatchlistPageState();
 }
 
-class _FavoritesPageState extends ConsumerState<FavoritesPage> {
+class _WatchlistPageState extends ConsumerState<WatchlistPage> {
   @override
   void initState() {
     super.initState();
-    // Charge les favoris quand la page est initialisée
-    Future.microtask(() => ref.read(favoritesProvider.notifier).loadFavorites());
+    // Charge la watchlist quand la page est initialisée
+    Future.microtask(() => ref.read(watchlistProvider.notifier).loadWatchlist());
   }
 
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(authStateProvider).value;
-    final favoritesState = ref.watch(favoritesProvider);
+    final watchlistState = ref.watch(watchlistProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Favoris'),
+        title: const Text('Watchlist'),
       ),
       body: user == null
           ? const Center(
-              child: Text('Veuillez vous connecter pour voir vos favoris.'),
+              child: Text('Please log in to see your watchlist.'),
             )
-          : favoritesState.when(
+          : watchlistState.when(
               loading: () => const Center(
                 child: CircularProgressIndicator(),
               ),
               error: (error, _) => Center(
-                child: Text('Erreur: $error'),
+                child: Text('Error: $error'),
               ),
               data: (movies) {
                 if (movies.isEmpty) {
                   return const Center(
-                    child: Text('Votre liste de favoris est vide.'),
+                    child: Text('Your watchlist is empty.'),
                   );
                 }
 
@@ -75,15 +76,15 @@ class _FavoritesPageState extends ConsumerState<FavoritesPage> {
                           ? Text(movie.releaseDate!.substring(0, 4))
                           : null,
                       trailing: IconButton(
-                        icon: const Icon(Icons.favorite, color: Colors.red),
+                        icon: const Icon(Icons.remove_circle_outline),
                         onPressed: () {
                           ref
-                              .read(favoritesProvider.notifier)
-                              .removeFromFavorites(movie.id);
+                              .read(watchlistProvider.notifier)
+                              .removeFromWatchlist(movie.id);
                         },
                       ),
                       onTap: () {
-                        // Navigation vers les détails du film
+                        // Navigate to movie details
                         // context.push('/movie/${movie.id}');
                       },
                     );
