@@ -3,14 +3,13 @@ import '../models/user.dart';
 
 abstract class AuthRepository {
   Future<Either<String, User>> login({
-    required String email,
+    required String username,
     required String password,
   });
 
   Future<Either<String, User>> register({
-    required String email,
-    required String password,
     required String username,
+    required String password,
   });
 
   Future<Either<String, void>> logout();

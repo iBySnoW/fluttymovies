@@ -32,13 +32,13 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Either<String, User>> login({
-    required String email,
+    required String username,
     required String password,
   }) async {
     try {
       final requestToken = await _authService.createRequestToken();
       final validatedToken = await _authService.createSessionWithLogin(
-        username: email,
+        username: username,
         password: password,
         requestToken: requestToken,
       );
@@ -49,7 +49,7 @@ class AuthRepositoryImpl implements AuthRepository {
       
       final user = User(
         id: accountDetails['id'].toString(),
-        username: accountDetails['username']?.toString() ?? email,
+        username: accountDetails['username']?.toString() ?? username,
         avatar: _buildAvatarUrl(avatarPath),
         sessionId: sessionId,
         isGuest: false,
@@ -64,9 +64,8 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Either<String, User>> register({
-    required String email,
-    required String password,
     required String username,
+    required String password,
   }) async {
     return Left('La création de compte doit se faire sur le site TMDB');
   }

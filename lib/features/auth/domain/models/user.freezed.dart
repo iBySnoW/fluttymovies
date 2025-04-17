@@ -22,6 +22,7 @@ User _$UserFromJson(Map<String, dynamic> json) {
 mixin _$User {
   String get id => throw _privateConstructorUsedError;
   String get username => throw _privateConstructorUsedError;
+  String? get email => throw _privateConstructorUsedError;
   String? get avatar => throw _privateConstructorUsedError;
   @JsonKey(name: 'session_id')
   String? get sessionId => throw _privateConstructorUsedError;
@@ -47,6 +48,7 @@ abstract class $UserCopyWith<$Res> {
   $Res call(
       {String id,
       String username,
+      String? email,
       String? avatar,
       @JsonKey(name: 'session_id') String? sessionId,
       @JsonKey(name: 'guest_session_id') String? guestSessionId,
@@ -70,6 +72,7 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
   $Res call({
     Object? id = null,
     Object? username = null,
+    Object? email = freezed,
     Object? avatar = freezed,
     Object? sessionId = freezed,
     Object? guestSessionId = freezed,
@@ -84,6 +87,10 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
               as String,
+      email: freezed == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String?,
       avatar: freezed == avatar
           ? _value.avatar
           : avatar // ignore: cast_nullable_to_non_nullable
@@ -114,6 +121,7 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
   $Res call(
       {String id,
       String username,
+      String? email,
       String? avatar,
       @JsonKey(name: 'session_id') String? sessionId,
       @JsonKey(name: 'guest_session_id') String? guestSessionId,
@@ -134,6 +142,7 @@ class __$$UserImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? username = null,
+    Object? email = freezed,
     Object? avatar = freezed,
     Object? sessionId = freezed,
     Object? guestSessionId = freezed,
@@ -148,6 +157,10 @@ class __$$UserImplCopyWithImpl<$Res>
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
               as String,
+      email: freezed == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String?,
       avatar: freezed == avatar
           ? _value.avatar
           : avatar // ignore: cast_nullable_to_non_nullable
@@ -174,6 +187,7 @@ class _$UserImpl implements _User {
   const _$UserImpl(
       {required this.id,
       required this.username,
+      this.email,
       this.avatar,
       @JsonKey(name: 'session_id') this.sessionId,
       @JsonKey(name: 'guest_session_id') this.guestSessionId,
@@ -186,6 +200,8 @@ class _$UserImpl implements _User {
   final String id;
   @override
   final String username;
+  @override
+  final String? email;
   @override
   final String? avatar;
   @override
@@ -200,7 +216,7 @@ class _$UserImpl implements _User {
 
   @override
   String toString() {
-    return 'User(id: $id, username: $username, avatar: $avatar, sessionId: $sessionId, guestSessionId: $guestSessionId, isGuest: $isGuest)';
+    return 'User(id: $id, username: $username, email: $email, avatar: $avatar, sessionId: $sessionId, guestSessionId: $guestSessionId, isGuest: $isGuest)';
   }
 
   @override
@@ -211,6 +227,7 @@ class _$UserImpl implements _User {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.username, username) ||
                 other.username == username) &&
+            (identical(other.email, email) || other.email == email) &&
             (identical(other.avatar, avatar) || other.avatar == avatar) &&
             (identical(other.sessionId, sessionId) ||
                 other.sessionId == sessionId) &&
@@ -221,8 +238,8 @@ class _$UserImpl implements _User {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, id, username, avatar, sessionId, guestSessionId, isGuest);
+  int get hashCode => Object.hash(runtimeType, id, username, email, avatar,
+      sessionId, guestSessionId, isGuest);
 
   /// Create a copy of User
   /// with the given fields replaced by the non-null parameter values.
@@ -244,6 +261,7 @@ abstract class _User implements User {
   const factory _User(
       {required final String id,
       required final String username,
+      final String? email,
       final String? avatar,
       @JsonKey(name: 'session_id') final String? sessionId,
       @JsonKey(name: 'guest_session_id') final String? guestSessionId,
@@ -255,6 +273,8 @@ abstract class _User implements User {
   String get id;
   @override
   String get username;
+  @override
+  String? get email;
   @override
   String? get avatar;
   @override

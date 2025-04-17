@@ -46,9 +46,12 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final authState = ref.watch(authStateProvider);
-    final isDarkMode = ref.watch(themeProvider);
     final theme = Theme.of(context);
+    final user = ref.watch(authStateProvider).value;
+
+    if (user == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -60,137 +63,101 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           ),
         ],
       ),
-      body: authState.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(child: Text('Erreur: $error')),
-        data: (user) {
-          if (user == null) {
-            return const Center(child: Text('Utilisateur non connecté'));
-          }
-
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: Stack(
-                      children: [
-                        Container(
-                          width: 100,
-                          height: 100,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            gradient: LinearGradient(
-                              colors: [
-                                theme.colorScheme.primary,
-                                theme.colorScheme.secondary,
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
-                          ),
-                          child: user.avatar != null
-                              ? ClipOval(
-                                  child: CachedNetworkImage(
-                                    imageUrl: user.avatar!,
-                                    fit: BoxFit.cover,
-                                    placeholder: (context, url) => const Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                    errorWidget: (context, url, error) => Icon(
-                                      Icons.person,
-                                      size: 50,
-                                      color: theme.colorScheme.onPrimary,
-                                    ),
-                                  ),
-                                )
-                              : Icon(
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Stack(
+                  children: [
+                    Container(
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                          colors: [
+                            theme.colorScheme.primary,
+                            theme.colorScheme.secondary,
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                      ),
+                      child: user.avatar != null
+                          ? ClipOval(
+                              child: CachedNetworkImage(
+                                imageUrl: user.avatar!,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) => const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                                errorWidget: (context, url, error) => Icon(
                                   Icons.person,
                                   size: 50,
                                   color: theme.colorScheme.onPrimary,
                                 ),
-                        ),
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.primary,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              Icons.edit,
-                              size: 20,
+                              ),
+                            )
+                          : Icon(
+                              Icons.person,
+                              size: 50,
                               color: theme.colorScheme.onPrimary,
                             ),
-                          ),
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.primary,
+                          shape: BoxShape.circle,
                         ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 32),
-                  TextFormField(
-                    controller: _usernameController,
-                    decoration: InputDecoration(
-                      labelText: 'Nom d\'utilisateur',
-                      prefixIcon: Icon(
-                        Icons.person_outline,
-                        color: theme.colorScheme.primary,
+                        child: Icon(
+                          Icons.edit,
+                          size: 20,
+                          color: theme.colorScheme.onPrimary,
+                        ),
                       ),
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Veuillez entrer un nom d\'utilisateur';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    initialValue: user.username,
-                    enabled: false,
-                    decoration: InputDecoration(
-                      labelText: 'Email',
-                      prefixIcon: Icon(
-                        Icons.email_outlined,
-                        color: theme.colorScheme.primary,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  ListTile(
-                    leading: Icon(
-                      isDarkMode ? Icons.dark_mode : Icons.light_mode,
-                      color: theme.colorScheme.primary,
-                    ),
-                    title: Text(
-                      'Mode sombre',
-                      style: theme.textTheme.titleMedium,
-                    ),
-                    trailing: Switch(
-                      value: isDarkMode,
-                      onChanged: (_) => ref.read(themeProvider.notifier).toggleTheme(),
-                      activeColor: theme.colorScheme.primary,
-                    ),
-                  ),
-                  const SizedBox(height: 32),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton.icon(
-                      onPressed: _updateProfile,
-                      icon: const Icon(Icons.save),
-                      label: const Text('Mettre à jour le profil'),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          );
-        },
+              const SizedBox(height: 32),
+              TextFormField(
+                controller: _usernameController,
+                decoration: InputDecoration(
+                  labelText: 'Nom d\'utilisateur',
+                  prefixIcon: Icon(
+                    Icons.person_outline,
+                    color: theme.colorScheme.primary,
+                  ),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Veuillez entrer un nom d\'utilisateur';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _updateProfile,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
+                  child: const Text('Mettre à jour le profil'),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

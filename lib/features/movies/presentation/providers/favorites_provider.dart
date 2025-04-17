@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dio/dio.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../../../movies/domain/models/movie.dart'; // Ajustez l'import selon votre structure
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class FavoritesNotifier extends StateNotifier<AsyncValue<List<Movie>>> {
   final Ref ref;
@@ -21,7 +22,7 @@ class FavoritesNotifier extends StateNotifier<AsyncValue<List<Movie>>> {
 
       final accountId = user.id;
       final sessionId = user.sessionId;
-      final apiKey = 'f6e398159b3ea651144af15fadbd39ea'; // Remplacez par votre API key ou utilisez une constante
+      final apiKey = DotEnv().env['TMDB_API_KEY'] ?? '';
 
       final response = await dio.get(
         'https://api.themoviedb.org/3/account/$accountId/favorite/movies',
@@ -53,7 +54,7 @@ class FavoritesNotifier extends StateNotifier<AsyncValue<List<Movie>>> {
 
       final accountId = user.id;
       final sessionId = user.sessionId;
-      final apiKey = 'f6e398159b3ea651144af15fadbd39ea'; // Remplacez par votre API key
+      final apiKey = DotEnv().env['TMDB_API_KEY'] ?? '';
 
       await dio.post(
         'https://api.themoviedb.org/3/account/$accountId/favorite',
@@ -82,7 +83,7 @@ class FavoritesNotifier extends StateNotifier<AsyncValue<List<Movie>>> {
 
       final accountId = user.id;
       final sessionId = user.sessionId;
-      final apiKey = 'f6e398159b3ea651144af15fadbd39ea'; // Remplacez par votre API key
+      final apiKey = DotEnv().env['TMDB_API_KEY'] ?? '';
 
       await dio.post(
         'https://api.themoviedb.org/3/account/$accountId/favorite',
@@ -106,12 +107,35 @@ class FavoritesNotifier extends StateNotifier<AsyncValue<List<Movie>>> {
     }
   }
 
+  Future<bool> checkFavoriteStatus(int movieId) async {
+    try {
+      final user = ref.read(authStateProvider).value;
+      if (user == null) return false;
+
+      final sessionId = user.sessionId;
+      final apiKey = DotEnv().env['TMDB_API_KEY'] ?? '';
+
+      final response = await dio.get(
+        'https://api.themoviedb.org/3/movie/$movieId/account_states',
+        queryParameters: {
+          'api_key': apiKey,
+          'session_id': sessionId,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return response.data['favorite'] ?? false;
+      }
+      return false;
+    } catch (e) {
+      print('Erreur lors de la vérification du statut favori: $e');
+      return false;
+    }
+  }
+
   // Vérifier si un film est dans les favoris
-  bool isFavorite(int movieId) {
-    return state.maybeWhen(
-      data: (movies) => movies.any((movie) => movie.id == movieId),
-      orElse: () => false,
-    );
+  Future<bool> isFavorite(int movieId) async {
+    return await checkFavoriteStatus(movieId);
   }
 }
 

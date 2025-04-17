@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dio/dio.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../../../movies/domain/models/movie.dart'; // Ajustez l'import selon votre structure
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 // État pour la watchlist
 class WatchlistState {
@@ -46,7 +47,7 @@ class WatchlistNotifier extends StateNotifier<AsyncValue<List<Movie>>> {
 
       final accountId = user.id;
       final sessionId = user.sessionId;
-      final apiKey = 'f6e398159b3ea651144af15fadbd39ea'; // Remplacez par votre API key ou utilisez une constante
+      final apiKey = DotEnv().env['TMDB_API_KEY'] ?? '';
 
       final response = await dio.get(
         'https://api.themoviedb.org/3/account/$accountId/watchlist/movies',
@@ -78,7 +79,7 @@ class WatchlistNotifier extends StateNotifier<AsyncValue<List<Movie>>> {
 
       final accountId = user.id;
       final sessionId = user.sessionId;
-      final apiKey = 'f6e398159b3ea651144af15fadbd39ea'; // Remplacez par votre API key
+      final apiKey = DotEnv().env['TMDB_API_KEY'] ?? '';
 
       await dio.post(
         'https://api.themoviedb.org/3/account/$accountId/watchlist',
@@ -107,7 +108,7 @@ class WatchlistNotifier extends StateNotifier<AsyncValue<List<Movie>>> {
 
       final accountId = user.id;
       final sessionId = user.sessionId;
-      final apiKey = 'f6e398159b3ea651144af15fadbd39ea'; // Remplacez par votre API key
+      final apiKey = DotEnv().env['TMDB_API_KEY'] ?? '';
 
       await dio.post(
         'https://api.themoviedb.org/3/account/$accountId/watchlist',
@@ -129,6 +130,37 @@ class WatchlistNotifier extends StateNotifier<AsyncValue<List<Movie>>> {
     } catch (e) {
       print('Failed to remove from watchlist: $e');
     }
+  }
+
+  Future<bool> checkWatchlistStatus(int movieId) async {
+    try {
+      final user = ref.read(authStateProvider).value;
+      if (user == null) return false;
+
+      final sessionId = user.sessionId;
+      final apiKey = DotEnv().env['TMDB_API_KEY'] ?? '';
+
+      final response = await dio.get(
+        'https://api.themoviedb.org/3/movie/$movieId/account_states',
+        queryParameters: {
+          'api_key': apiKey,
+          'session_id': sessionId,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return response.data['watchlist'] ?? false;
+      }
+      return false;
+    } catch (e) {
+      print('Erreur lors de la vérification du statut watchlist: $e');
+      return false;
+    }
+  }
+
+  // Vérifier si un film est dans la watchlist
+  Future<bool> isInWatchlist(int movieId) async {
+    return await checkWatchlistStatus(movieId);
   }
 }
 

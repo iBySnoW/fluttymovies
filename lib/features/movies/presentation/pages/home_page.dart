@@ -88,7 +88,7 @@ class _HomePageState extends ConsumerState<HomePage> with SingleTickerProviderSt
             ),
             actions: [
               IconButton(
-                icon: const Icon(Icons.notifications),
+                icon: const Icon(Icons.bookmark),
                 color: theme.colorScheme.onPrimary,
                 onPressed: () => context.push('/watchlist'),
               ),

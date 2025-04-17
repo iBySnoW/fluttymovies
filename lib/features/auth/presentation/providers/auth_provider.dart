@@ -40,7 +40,7 @@ class AuthNotifier extends StateNotifier<AsyncValue<User?>> {
     try {
       final repository = await _repositoryFuture;
       final result = await repository.login(
-        email: email,
+        username: email,
         password: password,
       );
       state = result.fold(
@@ -71,9 +71,8 @@ class AuthNotifier extends StateNotifier<AsyncValue<User?>> {
     try {
       final repository = await _repositoryFuture;
       final result = await repository.register(
-        email: email,
-        password: password,
         username: username,
+        password: password,
       );
       state = result.fold(
         (error) => AsyncValue.error(error, StackTrace.current),
