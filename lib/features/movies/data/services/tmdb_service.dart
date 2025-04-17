@@ -1,18 +1,49 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../core/di/dependencies.dart';
+import '../../../auth/domain/models/user.dart';
+import '../../../auth/presentation/providers/auth_provider.dart';
 import '../../domain/models/movie.dart';
 
 class TMDBService {
   final Dio _dio;
-  final String _apiKey;
   final String _baseUrl;
-  final String _sessionId;
+  final ProviderRef _ref;
+  final SharedPreferences _prefs;
+  static const String _apiKeyKey = 'tmdb_api_key';
+  static const String _accountIdKey = 'tmdb_account_id';
 
-  TMDBService()
+  TMDBService(this._ref)
       : _dio = Dio(),
-        _apiKey = dotenv.env['TMDB_API_KEY'] ?? '',
         _baseUrl = dotenv.env['TMDB_BASE_URL'] ?? '',
-        _sessionId = dotenv.env['TMDB_SESSION_ID'] ?? '';
+        _prefs = _ref.read(sharedPreferencesProvider);
+
+  String get _apiKey {
+    // Essayer d'abord de récupérer la clé depuis les préférences
+    final storedKey = _prefs.getString(_apiKeyKey);
+    if (storedKey != null && storedKey.isNotEmpty) {
+      return storedKey;
+    }
+    
+    // Sinon, utiliser la clé depuis le fichier .env
+    final envKey = dotenv.env['TMDB_API_KEY'] ?? '';
+    
+    // Sauvegarder la clé dans les préférences pour une utilisation future
+    if (envKey.isNotEmpty) {
+      _prefs.setString(_apiKeyKey, envKey);
+    }
+    
+    return envKey;
+  }
+
+  String? _getSessionId() {
+    final authState = _ref.read(authStateProvider);
+    final user = authState.value;
+    if (user == null) return null;
+    return user.isGuest ? user.guestSessionId : user.sessionId;
+  }
 
   Future<List<Movie>> getPopularMovies({int page = 1}) async {
     try {
@@ -105,10 +136,16 @@ class TMDBService {
 
   Future<void> rateMovie(int movieId, double rating) async {
     try {
+      final sessionId = _getSessionId();
+      if (sessionId == null) {
+        throw 'Vous devez être connecté pour noter un film';
+      }
+
       await _dio.post(
         '$_baseUrl/movie/$movieId/rating',
         queryParameters: {
           'api_key': _apiKey,
+          'guest_session_id': sessionId,
         },
         data: {
           'value': rating,
@@ -119,13 +156,51 @@ class TMDBService {
     }
   }
 
-  Future<void> addToFavorites(int movieId) async {
+  Future<String?> _getAccountId() async {
+    // Try to get from preferences first
+    String? accountId = _prefs.getString(_accountIdKey);
+    if (accountId != null) return accountId;
+
+    // If not found, fetch from API
+    final sessionId = _getSessionId();
+    if (sessionId == null) return null;
+
     try {
-      await _dio.post(
-        '$_baseUrl/account/{account_id}/favorite',
+      final response = await _dio.get(
+        '$_baseUrl/account',
         queryParameters: {
           'api_key': _apiKey,
-          'session_id': _sessionId,
+          'session_id': sessionId,
+        },
+      );
+
+      accountId = response.data['id'].toString();
+      // Save for future use
+      await _prefs.setString(_accountIdKey, accountId);
+      return accountId;
+    } catch (e) {
+      print('Error fetching account ID: $e');
+      return null;
+    }
+  }
+
+  Future<void> addToFavorites(int movieId) async {
+    try {
+      final sessionId = _getSessionId();
+      if (sessionId == null) {
+        throw 'Vous devez être connecté pour ajouter un film aux favoris';
+      }
+
+      final accountId = await _getAccountId();
+      if (accountId == null) {
+        throw 'Impossible de récupérer l\'ID du compte';
+      }
+
+      await _dio.post(
+        '$_baseUrl/account/$accountId/favorite',
+        queryParameters: {
+          'api_key': _apiKey,
+          'session_id': sessionId,
         },
         data: {
           'media_type': 'movie',
@@ -140,11 +215,21 @@ class TMDBService {
 
   Future<void> removeFromFavorites(int movieId) async {
     try {
+      final sessionId = _getSessionId();
+      if (sessionId == null) {
+        throw 'Vous devez être connecté pour supprimer un film des favoris';
+      }
+
+      final accountId = await _getAccountId();
+      if (accountId == null) {
+        throw 'Impossible de récupérer l\'ID du compte';
+      }
+
       await _dio.post(
-        '$_baseUrl/account/{account_id}/favorite',
+        '$_baseUrl/account/$accountId/favorite',
         queryParameters: {
           'api_key': _apiKey,
-          'session_id': _sessionId,
+          'session_id': sessionId,
         },
         data: {
           'media_type': 'movie',
@@ -159,11 +244,21 @@ class TMDBService {
 
   Future<List<Movie>> getFavoriteMovies({int page = 1}) async {
     try {
+      final sessionId = _getSessionId();
+      if (sessionId == null) {
+        throw 'Vous devez être connecté pour voir vos films favoris';
+      }
+
+      final accountId = await _getAccountId();
+      if (accountId == null) {
+        throw 'Impossible de récupérer l\'ID du compte';
+      }
+
       final response = await _dio.get(
-        '$_baseUrl/account/{account_id}/favorite/movies',
+        '$_baseUrl/account/$accountId/favorite/movies',
         queryParameters: {
           'api_key': _apiKey,
-          'session_id': _sessionId,
+          'session_id': sessionId,
           'page': page,
           'language': 'fr-FR',
         },

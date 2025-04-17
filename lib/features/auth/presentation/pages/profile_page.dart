@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../main.dart';
 import '../providers/auth_provider.dart';
 
@@ -93,9 +94,17 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           ),
                           child: user.avatar != null
                               ? ClipOval(
-                                  child: Image.network(
-                                    user.avatar!,
+                                  child: CachedNetworkImage(
+                                    imageUrl: user.avatar!,
                                     fit: BoxFit.cover,
+                                    placeholder: (context, url) => const Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                    errorWidget: (context, url, error) => Icon(
+                                      Icons.person,
+                                      size: 50,
+                                      color: theme.colorScheme.onPrimary,
+                                    ),
                                   ),
                                 )
                               : Icon(
@@ -142,7 +151,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
-                    initialValue: user.email,
+                    initialValue: user.username,
                     enabled: false,
                     decoration: InputDecoration(
                       labelText: 'Email',
