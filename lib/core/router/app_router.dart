@@ -8,6 +8,7 @@ import '../../features/movies/presentation/pages/movie_details_page.dart';
 import '../../features/favorites/presentation/pages/favorites_page.dart';
 import '../../features/auth/presentation/pages/profile_page.dart';
 import '../../features/auth/presentation/providers/auth_provider.dart';
+import '../../features/movies/presentation/pages/watchlist_page.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   // Écouter l'état d'authentification
@@ -69,6 +70,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/profile',
         builder: (context, state) => const ProfilePage(),
+      ),
+      GoRoute(
+        path: '/watchlist',
+        builder: (context, state) => const WatchlistPage(),
       ),
     ],
   );

@@ -4,7 +4,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../providers/movies_provider.dart';
-
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import '../../../auth/presentation/providers/auth_provider.dart';
+import '../providers/favorites_provider.dart';
 class MovieDetailsPage extends ConsumerWidget {
   final String movieId;
 
@@ -13,8 +16,32 @@ class MovieDetailsPage extends ConsumerWidget {
     required this.movieId,
   });
 
+  Future<void> addToWatchlist(String? sessionId) async {
+    final url = Uri.parse('https://api.themoviedb.org/3/account/20897079/watchlist?api_key=f6e398159b3ea651144af15fadbd39ea&session_id=$sessionId');
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+      },
+      body: jsonEncode({
+        "media_type": "movie",
+        "media_id": int.parse(movieId),
+        "watchlist": true,
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      print('Ajouté à la watchlist !');
+    } else {
+      print('Erreur lors de l\'ajout à la watchlist: ${response.statusCode} - ${response.body}');
+    }
+  }
+
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+        final user = ref.watch(authStateProvider).value;
     final movieState = ref.watch(movieDetailsProvider(int.parse(movieId)));
     final favoriteMoviesState = ref.watch(favoriteMoviesProvider);
     final theme = Theme.of(context);
@@ -176,11 +203,8 @@ class MovieDetailsPage extends ConsumerWidget {
             final isFavorite = favorites.any((m) => m.id == movie.id);
             return FloatingActionButton(
               onPressed: () {
-                if (isFavorite) {
-                  ref.read(favoriteMoviesProvider.notifier).removeFromFavorites(movie.id);
-                } else {
-                  ref.read(favoriteMoviesProvider.notifier).addToFavorites(movie.id);
-                }
+                ref.read(favoritesProvider.notifier).addToFavorites(movie.id);
+                print("Ajouté aux favoris: ${movie.title}");
               },
               backgroundColor: theme.colorScheme.primary,
               child: Icon(
@@ -191,6 +215,13 @@ class MovieDetailsPage extends ConsumerWidget {
           },
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      persistentFooterButtons: [
+        ElevatedButton(
+          onPressed: () => addToWatchlist(user?.sessionId),
+          child: const Text('Add to Watchlist'),
+        ),
+      ],
     );
   }
 } 
