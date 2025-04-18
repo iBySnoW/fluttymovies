@@ -59,7 +59,10 @@ class MovieGrid extends StatelessWidget {
             MovieCard(
               movie: movie,
               onTap: () {
-                // TODO: Implement navigation
+                Navigator.pushNamed(
+                  context,
+                  '/movie/${movie.id}',
+                );
               },
             ),
             Positioned(

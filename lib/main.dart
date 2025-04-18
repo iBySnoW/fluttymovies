@@ -5,13 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'core/theme/app_theme.dart';
 import 'core/di/dependencies.dart';
 import 'core/router/app_router.dart';
-import 'package:go_router/go_router.dart';
-import 'features/movies/presentation/pages/home_page.dart';
-import 'features/movies/presentation/pages/movie_details_page.dart';
-import 'features/auth/presentation/pages/login_page.dart';
-import 'features/auth/presentation/pages/register_page.dart';
-import 'features/auth/presentation/pages/profile_page.dart';
-import 'features/favorites/presentation/pages/favorites_page.dart';
 
 // Provider pour gérer le thème
 final themeProvider = StateNotifierProvider<ThemeNotifier, bool>((ref) {

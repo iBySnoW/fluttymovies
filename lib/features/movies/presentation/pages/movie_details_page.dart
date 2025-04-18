@@ -4,8 +4,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../providers/movies_provider.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../providers/favorites_provider.dart';
 import '../providers/watchlist_provider.dart';
@@ -27,27 +25,17 @@ class _MovieDetailsPageState extends ConsumerState<MovieDetailsPage> {
   bool isFavorite = false;
   bool isInWatchlist = false;
   final ScrollController _scrollController = ScrollController();
-  double _opacity = 1.0;
 
   @override
   void initState() {
     super.initState();
     _checkStatus();
-    _scrollController.addListener(_onScroll);
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
-  }
-
-  void _onScroll() {
-    if (_scrollController.offset <= 200) {
-      setState(() {
-        _opacity = 1 - (_scrollController.offset / 200);
-      });
-    }
   }
 
   Future<void> _checkStatus() async {

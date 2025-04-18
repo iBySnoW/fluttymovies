@@ -4,7 +4,6 @@ import 'dart:convert';
 import '../../domain/models/user.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../services/tmdb_auth_service.dart';
-import '../../../../core/constants/app_constants.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final SharedPreferences _prefs;

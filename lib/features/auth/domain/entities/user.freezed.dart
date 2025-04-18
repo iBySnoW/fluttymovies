@@ -21,14 +21,7 @@ User _$UserFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$User {
   String get id => throw _privateConstructorUsedError;
-  String get username => throw _privateConstructorUsedError;
-  String? get avatar => throw _privateConstructorUsedError;
-  @JsonKey(name: 'session_id')
-  String? get sessionId => throw _privateConstructorUsedError;
-  @JsonKey(name: 'guest_session_id')
-  String? get guestSessionId => throw _privateConstructorUsedError;
-  @JsonKey(name: 'is_guest')
-  bool get isGuest => throw _privateConstructorUsedError;
+  String? get name => throw _privateConstructorUsedError;
 
   /// Serializes this User to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -44,13 +37,7 @@ abstract class $UserCopyWith<$Res> {
   factory $UserCopyWith(User value, $Res Function(User) then) =
       _$UserCopyWithImpl<$Res, User>;
   @useResult
-  $Res call(
-      {String id,
-      String username,
-      String? avatar,
-      @JsonKey(name: 'session_id') String? sessionId,
-      @JsonKey(name: 'guest_session_id') String? guestSessionId,
-      @JsonKey(name: 'is_guest') bool isGuest});
+  $Res call({String id, String? name});
 }
 
 /// @nodoc
@@ -69,37 +56,17 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
   @override
   $Res call({
     Object? id = null,
-    Object? username = null,
-    Object? avatar = freezed,
-    Object? sessionId = freezed,
-    Object? guestSessionId = freezed,
-    Object? isGuest = null,
+    Object? name = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      username: null == username
-          ? _value.username
-          : username // ignore: cast_nullable_to_non_nullable
-              as String,
-      avatar: freezed == avatar
-          ? _value.avatar
-          : avatar // ignore: cast_nullable_to_non_nullable
+      name: freezed == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
               as String?,
-      sessionId: freezed == sessionId
-          ? _value.sessionId
-          : sessionId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      guestSessionId: freezed == guestSessionId
-          ? _value.guestSessionId
-          : guestSessionId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      isGuest: null == isGuest
-          ? _value.isGuest
-          : isGuest // ignore: cast_nullable_to_non_nullable
-              as bool,
     ) as $Val);
   }
 }
@@ -111,13 +78,7 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
       __$$UserImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String username,
-      String? avatar,
-      @JsonKey(name: 'session_id') String? sessionId,
-      @JsonKey(name: 'guest_session_id') String? guestSessionId,
-      @JsonKey(name: 'is_guest') bool isGuest});
+  $Res call({String id, String? name});
 }
 
 /// @nodoc
@@ -133,37 +94,17 @@ class __$$UserImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? username = null,
-    Object? avatar = freezed,
-    Object? sessionId = freezed,
-    Object? guestSessionId = freezed,
-    Object? isGuest = null,
+    Object? name = freezed,
   }) {
     return _then(_$UserImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      username: null == username
-          ? _value.username
-          : username // ignore: cast_nullable_to_non_nullable
-              as String,
-      avatar: freezed == avatar
-          ? _value.avatar
-          : avatar // ignore: cast_nullable_to_non_nullable
+      name: freezed == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
               as String?,
-      sessionId: freezed == sessionId
-          ? _value.sessionId
-          : sessionId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      guestSessionId: freezed == guestSessionId
-          ? _value.guestSessionId
-          : guestSessionId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      isGuest: null == isGuest
-          ? _value.isGuest
-          : isGuest // ignore: cast_nullable_to_non_nullable
-              as bool,
     ));
   }
 }
@@ -171,13 +112,7 @@ class __$$UserImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$UserImpl implements _User {
-  const _$UserImpl(
-      {required this.id,
-      required this.username,
-      this.avatar,
-      @JsonKey(name: 'session_id') this.sessionId,
-      @JsonKey(name: 'guest_session_id') this.guestSessionId,
-      @JsonKey(name: 'is_guest') this.isGuest = false});
+  const _$UserImpl({required this.id, this.name});
 
   factory _$UserImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserImplFromJson(json);
@@ -185,22 +120,11 @@ class _$UserImpl implements _User {
   @override
   final String id;
   @override
-  final String username;
-  @override
-  final String? avatar;
-  @override
-  @JsonKey(name: 'session_id')
-  final String? sessionId;
-  @override
-  @JsonKey(name: 'guest_session_id')
-  final String? guestSessionId;
-  @override
-  @JsonKey(name: 'is_guest')
-  final bool isGuest;
+  final String? name;
 
   @override
   String toString() {
-    return 'User(id: $id, username: $username, avatar: $avatar, sessionId: $sessionId, guestSessionId: $guestSessionId, isGuest: $isGuest)';
+    return 'User(id: $id, name: $name)';
   }
 
   @override
@@ -209,20 +133,12 @@ class _$UserImpl implements _User {
         (other.runtimeType == runtimeType &&
             other is _$UserImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.username, username) ||
-                other.username == username) &&
-            (identical(other.avatar, avatar) || other.avatar == avatar) &&
-            (identical(other.sessionId, sessionId) ||
-                other.sessionId == sessionId) &&
-            (identical(other.guestSessionId, guestSessionId) ||
-                other.guestSessionId == guestSessionId) &&
-            (identical(other.isGuest, isGuest) || other.isGuest == isGuest));
+            (identical(other.name, name) || other.name == name));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, id, username, avatar, sessionId, guestSessionId, isGuest);
+  int get hashCode => Object.hash(runtimeType, id, name);
 
   /// Create a copy of User
   /// with the given fields replaced by the non-null parameter values.
@@ -241,31 +157,15 @@ class _$UserImpl implements _User {
 }
 
 abstract class _User implements User {
-  const factory _User(
-      {required final String id,
-      required final String username,
-      final String? avatar,
-      @JsonKey(name: 'session_id') final String? sessionId,
-      @JsonKey(name: 'guest_session_id') final String? guestSessionId,
-      @JsonKey(name: 'is_guest') final bool isGuest}) = _$UserImpl;
+  const factory _User({required final String id, final String? name}) =
+      _$UserImpl;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$UserImpl.fromJson;
 
   @override
   String get id;
   @override
-  String get username;
-  @override
-  String? get avatar;
-  @override
-  @JsonKey(name: 'session_id')
-  String? get sessionId;
-  @override
-  @JsonKey(name: 'guest_session_id')
-  String? get guestSessionId;
-  @override
-  @JsonKey(name: 'is_guest')
-  bool get isGuest;
+  String? get name;
 
   /// Create a copy of User
   /// with the given fields replaced by the non-null parameter values.
