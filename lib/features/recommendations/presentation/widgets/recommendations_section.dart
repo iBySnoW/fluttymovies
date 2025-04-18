@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../movies/domain/models/movie.dart';
 import '../../../movies/presentation/widgets/movie_card.dart';
 import '../providers/recommendations_provider.dart';
 

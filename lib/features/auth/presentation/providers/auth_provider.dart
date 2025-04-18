@@ -3,7 +3,6 @@ import '../../domain/models/user.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 import '../../../../core/di/dependencies.dart';
-import 'dart:convert';
 
 // Provider pour l'état d'authentification
 final authStateProvider = StateNotifierProvider<AuthNotifier, AsyncValue<User?>>((ref) {
