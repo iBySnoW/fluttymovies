@@ -54,10 +54,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // Logo et titre
-                  Icon(
-                    Icons.movie,
-                    size: 80,
-                    color: Colors.white,
+                  Image.asset(
+                    'assets/icon/icon.png',
+                    width: 80,
+                    height: 80,
                   ),
                   const SizedBox(height: 16),
                   Text(

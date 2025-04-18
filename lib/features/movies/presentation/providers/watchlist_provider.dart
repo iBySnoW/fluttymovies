@@ -47,7 +47,7 @@ class WatchlistNotifier extends StateNotifier<AsyncValue<List<Movie>>> {
 
       final accountId = user.id;
       final sessionId = user.sessionId;
-      final apiKey = DotEnv().env['TMDB_API_KEY'] ?? '';
+      final apiKey = dotenv.get('TMDB_API_KEY');
 
       final response = await dio.get(
         'https://api.themoviedb.org/3/account/$accountId/watchlist/movies',
@@ -79,7 +79,7 @@ class WatchlistNotifier extends StateNotifier<AsyncValue<List<Movie>>> {
 
       final accountId = user.id;
       final sessionId = user.sessionId;
-      final apiKey = DotEnv().env['TMDB_API_KEY'] ?? '';
+      final apiKey = dotenv.get('TMDB_API_KEY');
 
       await dio.post(
         'https://api.themoviedb.org/3/account/$accountId/watchlist',
@@ -108,7 +108,7 @@ class WatchlistNotifier extends StateNotifier<AsyncValue<List<Movie>>> {
 
       final accountId = user.id;
       final sessionId = user.sessionId;
-      final apiKey = DotEnv().env['TMDB_API_KEY'] ?? '';
+      final apiKey = dotenv.get('TMDB_API_KEY');
 
       await dio.post(
         'https://api.themoviedb.org/3/account/$accountId/watchlist',
@@ -138,7 +138,7 @@ class WatchlistNotifier extends StateNotifier<AsyncValue<List<Movie>>> {
       if (user == null) return false;
 
       final sessionId = user.sessionId;
-      final apiKey = DotEnv().env['TMDB_API_KEY'] ?? '';
+      final apiKey = dotenv.get('TMDB_API_KEY');
 
       final response = await dio.get(
         'https://api.themoviedb.org/3/movie/$movieId/account_states',

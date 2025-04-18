@@ -22,7 +22,7 @@ class FavoritesNotifier extends StateNotifier<AsyncValue<List<Movie>>> {
 
       final accountId = user.id;
       final sessionId = user.sessionId;
-      final apiKey = DotEnv().env['TMDB_API_KEY'] ?? '';
+      final apiKey = dotenv.env['TMDB_API_KEY'] ?? '';
 
       final response = await dio.get(
         'https://api.themoviedb.org/3/account/$accountId/favorite/movies',

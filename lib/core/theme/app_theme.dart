@@ -2,22 +2,17 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   // Couleurs principales
-  static const Color popcornRed = Color(0xFFFF3B30);
-  static const Color sunlightGold = Color(0xFFFFD60A);
+  static const Color primaryPurple = Color(0xFF6C63FF);
+  static const Color accentGold = Color(0xFFFFB800);
+  static const Color lightPurple = Color(0xFF8B85FF);
+  static const Color darkPurple = Color(0xFF4A41FF);
   static const Color cineLight = Color(0xFFF8F9FA);
   static const Color movieNight = Color(0xFF121212);
-  static const Color freshLime = Color(0xFF34C759);
-  static const Color trailerBlue = Color(0xFF0A84FF);
   static const Color greyReel = Color(0xFF8E8E93);
-  
-  // Nouvelles couleurs
-  static const Color accentPurple = Color(0xFF6C63FF);
-  static const Color softBlue = Color(0xFF5B8DEF);
-  static const Color neonPink = Color(0xFFFF2D55);
   
   // Gradients
   static const LinearGradient primaryGradient = LinearGradient(
-    colors: [popcornRed, neonPink],
+    colors: [darkPurple, lightPurple],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
@@ -25,12 +20,12 @@ class AppTheme {
   // Thème clair
   static ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
-    primaryColor: popcornRed,
+    primaryColor: primaryPurple,
     scaffoldBackgroundColor: cineLight,
     colorScheme: ColorScheme.light(
-      primary: popcornRed,
-      secondary: accentPurple,
-      tertiary: freshLime,
+      primary: primaryPurple,
+      secondary: accentGold,
+      tertiary: lightPurple,
       background: cineLight,
       surface: Colors.white,
       onPrimary: Colors.white,
@@ -77,7 +72,7 @@ class AppTheme {
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: popcornRed,
+        backgroundColor: primaryPurple,
         foregroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         shape: RoundedRectangleBorder(
@@ -99,7 +94,7 @@ class AppTheme {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
-        borderSide: const BorderSide(color: popcornRed, width: 2),
+        borderSide: const BorderSide(color: primaryPurple, width: 2),
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
     ),
@@ -116,12 +111,12 @@ class AppTheme {
   // Thème sombre
   static ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
-    primaryColor: neonPink,
+    primaryColor: primaryPurple,
     scaffoldBackgroundColor: movieNight,
     colorScheme: ColorScheme.dark(
-      primary: neonPink,
-      secondary: accentPurple,
-      tertiary: freshLime,
+      primary: primaryPurple,
+      secondary: accentGold,
+      tertiary: lightPurple,
       background: movieNight,
       surface: const Color(0xFF1E1E1E),
       onPrimary: Colors.white,
@@ -168,7 +163,7 @@ class AppTheme {
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: neonPink,
+        backgroundColor: primaryPurple,
         foregroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         shape: RoundedRectangleBorder(
@@ -190,7 +185,7 @@ class AppTheme {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
-        borderSide: const BorderSide(color: neonPink, width: 2),
+        borderSide: const BorderSide(color: primaryPurple, width: 2),
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
     ),

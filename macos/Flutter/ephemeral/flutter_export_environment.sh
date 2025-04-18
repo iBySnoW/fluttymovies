@@ -1,13 +1,12 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
-export "FLUTTER_ROOT=/Users/hugolegal/fvm/versions/3.29.2"
-export "FLUTTER_APPLICATION_PATH=/Users/hugolegal/Documents/PROJECT/fluttymovies"
+export "FLUTTER_ROOT=/Users/corentindanvin/fvm/versions/3.29.2"
+export "FLUTTER_APPLICATION_PATH=/Users/corentindanvin/Desktop/Cours/Mobile/fluttymovies"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
-export "FLUTTER_TARGET=/Users/hugolegal/Documents/PROJECT/fluttymovies/lib/main.dart"
 export "FLUTTER_BUILD_DIR=build"
 export "FLUTTER_BUILD_NAME=1.0.0"
 export "FLUTTER_BUILD_NUMBER=1"
 export "DART_OBFUSCATION=false"
 export "TRACK_WIDGET_CREATION=true"
 export "TREE_SHAKE_ICONS=false"
-export "PACKAGE_CONFIG=/Users/hugolegal/Documents/PROJECT/fluttymovies/.dart_tool/package_config.json"
+export "PACKAGE_CONFIG=.dart_tool/package_config.json"

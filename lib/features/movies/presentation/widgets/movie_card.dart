@@ -146,7 +146,7 @@ class _MovieCardState extends State<MovieCard> with SingleTickerProviderStateMix
                                   vertical: 4,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: AppTheme.sunlightGold.withOpacity(0.2),
+                                  color: AppTheme.accentGold.withOpacity(0.2),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Row(
@@ -155,14 +155,14 @@ class _MovieCardState extends State<MovieCard> with SingleTickerProviderStateMix
                                     Icon(
                                       Icons.star_rounded,
                                       size: 16,
-                                      color: AppTheme.sunlightGold,
+                                      color: AppTheme.accentGold,
                                     ),
                                     const SizedBox(width: 4),
                                     Text(
                                       widget.movie.voteAverage.toStringAsFixed(1),
                                       style: theme.textTheme.bodySmall?.copyWith(
                                         fontWeight: FontWeight.bold,
-                                        color: AppTheme.sunlightGold,
+                                        color: AppTheme.accentGold,
                                       ),
                                     ),
                                   ],

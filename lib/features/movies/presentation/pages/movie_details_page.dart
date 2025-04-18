@@ -187,9 +187,9 @@ class _MovieDetailsPageState extends ConsumerState<MovieDetailsPage> {
                               const SizedBox(height: 8),
                               Row(
                                 children: [
-                                  Icon(
+                                  const Icon(
                                     Icons.star,
-                                    color: AppTheme.sunlightGold,
+                                    color: AppTheme.accentGold,
                                     size: 20,
                                   ),
                                   const SizedBox(width: 4),
@@ -265,9 +265,9 @@ class _MovieDetailsPageState extends ConsumerState<MovieDetailsPage> {
                             allowHalfRating: true,
                             itemCount: 5,
                             itemSize: 40,
-                            itemBuilder: (context, _) => Icon(
+                            itemBuilder: (context, _) => const Icon(
                               Icons.star,
-                              color: AppTheme.sunlightGold,
+                              color: AppTheme.accentGold,
                             ),
                             onRatingUpdate: (rating) {
                               ref.read(movieDetailsProvider(int.parse(widget.movieId)).notifier)
